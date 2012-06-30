@@ -1,5 +1,5 @@
 #!/bin/sh
-version=0.16
+version=0.18
 
 echo " `basename $0` $version"
 
@@ -17,8 +17,18 @@ fi
 #variables
 export WEBHOME=/var/aegir
 
+if [ -s /etc/centos-release ] 
+then
+        os=centos
+        grep 6 /etc/centos-release > /dev/null && version=6 || version=5
+else
+        os=rhel
+        grep 6 /etc/redhat-release > /dev/null && version=6 || version=5
+fi
+
 yum -y erase php php-common
-yum -y install httpd postfix sudo unzip mysql-server php53 php53-pdo php53-process php53-mysql git php53-mbstring bzr cvs php53-gd php53-xml
+
+[ "$version" -eq "5" ] && yum -y install httpd postfix sudo unzip mysql-server php53 php53-pdo php53-process php53-mysql git php53-mbstring bzr cvs php53-gd php53-xml || yum -y install httpd postfix sudo unzip mysql-server php php-pdo php-process php-mysql git php-mbstring bzr cvs php-gd php-xml
 
 echo " INFO: Raising PHP's memory limit to 512M"
 sed -i 's/^memory_limit = .*$/memory_limit = 512M/g' /etc/php.ini 
@@ -121,7 +131,7 @@ crontab -l | grep up > /dev/null 2>&1
 if ! [ $? -eq 0 ]
 then
 	crontab -l > /tmp/cron.aegir
-	echo "0 3 * * * /var/aegir/bin/drush/drush -y @hostmaster up" >> /tmp/cron.aegir
+	echo "#0 3 * * * /var/aegir/bin/drush/drush -y @hostmaster up" >> /tmp/cron.aegir #disabled as it also updates jquery_ui to an unsupported version
 	echo "29 * * * * /var/aegir/bin/drush/drush -y @hostmaster cron" >> /tmp/cron.aegir
 	echo "45 1 * * * /var/aegir/bin/drush/drush -y @sites up" >> /tmp/cron.aegir
 	crontab /tmp/cron.aegir
