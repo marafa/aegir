@@ -1,18 +1,19 @@
 #!/bin/sh
-version=0.18
+version=0.22
 
 echo " `basename $0` $version"
 
 #Instructions from http://community.aegirproject.org/installing/manual
 
 #this script is only for redhat based systems
-#this script has only been tested on CentOS 5 system
+#this script has only been tested on CentOS 5 & 6 systems
 
 if ! [ -s /etc/redhat-release ] #assuming this is sufficient
 then 
-	echo " ERR: This is _NOT_ a Redhat based distribution. Quitting"
+	echo " ERROR: This is _NOT_ a Redhat based distribution. Quitting"
 	exit 1
 fi
+echo "بسم الله الرحمن الرحيم"
 
 #variables
 export WEBHOME=/var/aegir
@@ -26,8 +27,9 @@ else
         grep 6 /etc/redhat-release > /dev/null && version=6 || version=5
 fi
 
-yum -y erase php php-common
+interface=eth0
 
+[ "$version" -eq "5" ] && yum -y erase php php-common
 [ "$version" -eq "5" ] && yum -y install httpd postfix sudo unzip mysql-server php53 php53-pdo php53-process php53-mysql git php53-mbstring bzr cvs php53-gd php53-xml || yum -y install httpd postfix sudo unzip mysql-server php php-pdo php-process php-mysql git php-mbstring bzr cvs php-gd php-xml
 
 echo " INFO: Raising PHP's memory limit to 512M"
@@ -42,13 +44,19 @@ service mysqld restart
 chkconfig httpd on
 chkconfig mysqld on
 
-/usr/bin/mysql_secure_installation
+mysql -uroot -e 'show databases;' > /dev/null 2>&1
+if [ $? -eq 0 ]
+then 
+	/usr/bin/mysql_secure_installation
+else
+	echo " INFO: MySQL previous configured. Skipping"
+fi
 
 echo " INFO: Disabling SElinux"
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 echo 0 >/selinux/enforce
 
-echo " INFO: User creation"
+echo " INFO: AEgir User creation"
 useradd --home-dir $WEBHOME aegir
 gpasswd -a aegir apache
 chmod -R 755 $WEBHOME
@@ -69,12 +77,31 @@ then
 fi
 
 #dns configuration - add to /etc/hosts
+hostfile(){
+echo " INFO: Adding `hostname` entry to /etc/hosts"
+ip=`ifconfig $interface | grep -w inet | awk '{print $2}' | cut -d: -f2`
+echo "$ip\t`hostname`" >> /etc/hosts
+}
+
+host `hostname` > /dev/null
+if ! [ $? -eq 0 ]
+then
+	grep `hostname` /etc/hosts > /dev/null
+	if ! [ $? -eq 0 ]
+	then
+		hostfile
+	else
+		echo " ERROR: `hostname` does not resolve even though it is /etc/hosts"
+	fi
+fi
+
 echo " INFO: Switching to aegir user"
 su -c -l aegir '
 #the below line enables bash debugging
 #set -x
 
 export DRUSH_VERSION=7.x-4.5
+#export DRUSH_VERSION=7.x-4.6
 export WEBHOME=/var/aegir
 export HOME=$WEBHOME
 export drush="$HOME/bin/drush/drush" 
@@ -131,29 +158,23 @@ crontab -l | grep up > /dev/null 2>&1
 if ! [ $? -eq 0 ]
 then
 	crontab -l > /tmp/cron.aegir
-	echo "#0 3 * * * /var/aegir/bin/drush/drush -y @hostmaster up" >> /tmp/cron.aegir #disabled as it also updates jquery_ui to an unsupported version
+	echo "0 3 * * * /var/aegir/bin/drush/drush -y @hostmaster up" >> /tmp/cron.aegir
 	echo "29 * * * * /var/aegir/bin/drush/drush -y @hostmaster cron" >> /tmp/cron.aegir
 	echo "45 1 * * * /var/aegir/bin/drush/drush -y @sites up" >> /tmp/cron.aegir
 	crontab /tmp/cron.aegir
 	rm -rf /tmp/cron.aegir
 fi
 
-echo ************************************************************************
+echo "************************************************************************"
 echo " INFO: Updating Drupal installation"
 #enable the update module
-$drush -y -r /var/aegir/hostmaster -l http://$AEGIR_HOST en update
+#$drush -y -r /var/aegir/hostmaster -l http://$AEGIR_HOST en update
+$drush -y @hostmaster en update
 #do the update
-$drush -y -r /var/aegir/hostmaster -l http://$AEGIR_HOST up
-echo " INFO: Updating jquery.ui"
-mkdir ~/hostmaster/sites/all/libraries
-cd ~/hostmaster/sites/all/libraries
-export JQUERY_VER=1.8.19
-wget http://jqueryui.com/download/jquery-ui-$JQUERY_VER.custom.zip
-#unzip jquery-ui-$QUERY_VER.custom.zip 
-unzip jquery-ui-$JQUERY_VER.custom.zip
-mv development-bundle/ jquery.ui
+#$drush -y -r /var/aegir/hostmaster -l http://$AEGIR_HOST up
+$drush -y @hostmaster up
 
-echo ************************************************************************
+echo "************************************************************************"
 echo " INFO: Installation complete. Please read email for $EMAIL to continue"
-echo ************************************************************************
+echo "************************************************************************"
 '
