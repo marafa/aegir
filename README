@@ -1,1 +1,5 @@
 Script to install aegir on CentOS/RHEL 6
+
+This script is in two parts:
+1. aegir_root.sh - to be run as root to pull in the dependencies and create the aegir user. 
+2. aegir_provision.sh - to be run as the newly created aegir user. Note that the variable called aegir_ver must be edited to reflect the latest version of aegir
