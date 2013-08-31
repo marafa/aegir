@@ -50,9 +50,9 @@ crontab -l | grep up > /dev/null 2>&1
 if ! [ $? -eq 0 ]
 then
 	crontab -l > /tmp/cron.aegir
-	echo "0 3 * * * /var/aegir/drush/drush -y @hostmaster up" >> /tmp/cron.aegir
-	echo "29 * * * * /var/aegir/drush/drush -y @hostmaster cron" >> /tmp/cron.aegir
-	echo "45 1 * * * /var/aegir/drush/drush -y @sites up" >> /tmp/cron.aegir
+	echo "0 3 * * * /usr/bin/drush -y @hostmaster up" >> /tmp/cron.aegir
+	echo "29 * * * * /usr/bin/drush -y @hostmaster cron" >> /tmp/cron.aegir
+	echo "45 1 * * * /usr/bin/drush -y @sites up" >> /tmp/cron.aegir
 	crontab /tmp/cron.aegir
 	rm -rf /tmp/cron.aegir
 fi
