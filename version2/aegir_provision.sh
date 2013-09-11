@@ -39,6 +39,11 @@ cd $HOME
 echo " INFO: Installing drupal module : provision"
 drush -y dl provision-$aegir_ver 
 
+if [ "$aegir_ver" == "6.x-2.0-rc4" ]                                             
+then                                                                             
+	sed -i 's,https://drupal,http://drupal,g' $HOME/.drush/provision/aegir.ma
+fi
+
 echo  " INFO: Running hostmaster install"
 drush -y hostmaster-install $AEGIR_HOST --aegir_db_pass=$AEGIR_DB_PASS --client_email=$EMAIL
 
