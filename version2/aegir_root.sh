@@ -103,3 +103,12 @@ then
 		echo " ERROR: `hostname` does not resolve even though it is /etc/hosts"
 	fi
 fi
+
+
+drush_upgrade(){ #upgrade drush to latest
+pear upgrade
+pear channel-discover pear.drush.org
+pear install drush/drush
+}
+
+drush_upgrade &
