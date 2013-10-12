@@ -1,6 +1,14 @@
 #!/bin/sh
 version=0.2-36
 
+##############variables to change#########################
+
+
+interface=eth0
+
+
+###############end#######################
+
 echo " `basename $0` $version"
 
 #Instructions from http://community.aegirproject.org/installing/manual
@@ -32,8 +40,6 @@ then
 	echo " ERROR: `basename $0` is only for $os 6"
 	exit 8
 fi
-
-interface=eth0
 
 yum -y install ftp://ftp.muug.mb.ca/mirror/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
 
@@ -111,4 +117,4 @@ pear channel-discover pear.drush.org
 pear install drush/drush
 }
 
-drush_upgrade &
+drush_upgrade
