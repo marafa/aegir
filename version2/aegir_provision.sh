@@ -1,24 +1,25 @@
 #!/bin/sh
 version=0.3
 
-#the below line enables bash debugging
-#set -x
-#trap read debug
-
 #Instructions from http://community.aegirproject.org/installing/manual
 
 #this script is only for redhat based systems
 #this script has only been tested on CentOS 5 & 6 systems
 
+#############variables to change#####################
+#the below line enables bash debugging
+#set -x
+#trap read debug
+
 export aegir_ver=6.x-2.0-rc4
-export WEBHOME=/var/aegir
-export HOME=$WEBHOME
 export DRUPAL_VER=6.x
 
 #the following is the fqdn of the aegir front end
 export AEGIR_HOST=`hostname`
 export AEGIR_DB_PASS=password
 export EMAIL=root@`hostname`
+##########################end##################
+export HOME=/var/aegir
 
 echo " `basename $0` $version"
 
@@ -41,7 +42,7 @@ drush -y dl provision-$aegir_ver
 
 if [ "$aegir_ver" == "6.x-2.0-rc4" ]                                             
 then                                                                             
-	sed -i 's,https://drupal,http://drupal,g' $HOME/.drush/provision/aegir.ma
+	sed -i 's,https://drupal,http://drupal,g' $HOME/.drush/provision/aegir.make
 fi
 
 echo  " INFO: Running hostmaster install"
