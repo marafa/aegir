@@ -61,6 +61,7 @@ setenforce 0
 
 echo " INFO: AEgir User creation"
 useradd --home-dir $WEBHOME aegir
+echo "aegir:password" | chpasswd
 gpasswd -a aegir apache
 chmod -R 755 $WEBHOME
 
@@ -101,8 +102,8 @@ fi
 echo " INFO: Switching to aegir user"
 su -c -l aegir '
 #the below 2 lines enables bash debugging
-set -x
-trap read debug
+#!#set -x
+#!#trap read debug
 
 export WEBHOME=/var/aegir
 export HOME=$WEBHOME
@@ -129,14 +130,7 @@ wget http://ftp.drupal.org/files/projects/drush-$DRUSH_VERSION.tar.gz
 gunzip -c drush-$DRUSH_VERSION.tar.gz | tar -xf - > /dev/null 2>&1
 rm -rf drush-$DRUSH_VERSION.tar.gz
 
-##set up the alias for drush
-#grep drush $HOME/.bashrc > /dev/null
-#if ! [ $? -eq 0 ]
-#then
-#        echo "alias drush='$WEBHOME/bin/drush/drush'" >> $HOME/.bashrc
-#fi
-
-ln -s $WEBHOME/.drush/drush/drush.php $WEBHOME/bin/drush 
+ln -s $HOME/.drush/drush/drush $HOME/bin/drush
 }
 
 drush4 #drush 4.5 - 4.6 will not work either
