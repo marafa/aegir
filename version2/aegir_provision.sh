@@ -11,7 +11,7 @@ version=0.3
 #set -x
 #trap read debug
 
-export aegir_ver=6.x-2.0-rc4
+export aegir_ver=6.x-2.0-rc5
 export DRUPAL_VER=6.x
 
 #the following is the fqdn of the aegir front end
