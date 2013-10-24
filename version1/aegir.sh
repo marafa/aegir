@@ -16,7 +16,7 @@ fi
 echo "بسم الله الرحمن الرحيم"
 
 #variables
-export WEBHOME=/var/aegir
+export HOME=/var/aegir
 
 if [ -s /etc/centos-release ] 
 then
@@ -60,13 +60,13 @@ echo 0 >/selinux/enforce
 setenforce 0
 
 echo " INFO: AEgir User creation"
-useradd --home-dir $WEBHOME aegir
+useradd --home-dir $HOME aegir
 echo "aegir:password" | chpasswd
 gpasswd -a aegir apache
-chmod -R 755 $WEBHOME
+chmod -R 755 $HOME
 
-! [ -d $WEBHOME ] && mkdir $WEBHOME 
-chown aegir.apache $WEBHOME
+! [ -d $HOME ] && mkdir $HOME 
+chown aegir.apache $HOME
 
 grep aegir /etc/sudoers > /dev/null
 if ! [ $? -eq 0 ]
@@ -77,7 +77,7 @@ fi
 
 if ! [ -d /etc/httpd/conf.d/aegir.conf ]
 then 
-        ln -s $WEBHOME/config/apache.conf /etc/httpd/conf.d/aegir.conf
+        ln -s $HOME/config/apache.conf /etc/httpd/conf.d/aegir.conf
 fi
 
 #dns configuration - add to /etc/hosts
@@ -105,10 +105,10 @@ su -c -l aegir '
 #!#set -x
 #!#trap read debug
 
-export WEBHOME=/var/aegir
-export HOME=$WEBHOME
+export HOME=/var/aegir
 export DRUPAL_VER=6.x
 export drush=$HOME/bin/drush
+export aegir_ver=6.x-1.10
 
 #the following is the fqdn of the aegir front end
 export AEGIR_HOST=`hostname`
@@ -153,7 +153,7 @@ cd $HOME
 #drush -y self-update #no longer necessary
 
 echo " INFO: Installing drupal module : provision"
-drush -y dl --destination=$HOME/.drush provision-6.x
+drush -y dl --destination=$HOME/.drush provision-$aegir_ver
 
 echo  " INFO: Running hostmaster install"
 drush -y hostmaster-install $AEGIR_HOST --aegir_db_pass=$AEGIR_DB_PASS --client_email=$EMAIL
