@@ -52,13 +52,13 @@ ln -s $HOME/hostmaster* hostmaster
 
 #prepare crontab
 echo " INFO: Updating crontab"
-crontab -l | grep up > /dev/null 2>&1
+crontab -l | grep cron > /dev/null 2>&1
 if ! [ $? -eq 0 ]
 then
 	crontab -l > /tmp/cron.aegir
-	echo "0 3 * * * /usr/bin/drush -y @hostmaster up" >> /tmp/cron.aegir
-	echo "29 * * * * /usr/bin/drush -y @hostmaster cron" >> /tmp/cron.aegir
-	echo "45 1 * * * /usr/bin/drush -y @sites up" >> /tmp/cron.aegir
+	#echo "45 1 * * * /usr/bin/drush -y @sites up" >> /tmp/cron.aegir
+	#echo "0 3 * * * /usr/bin/drush -y @hostmaster up" >> /tmp/cron.aegir
+	echo "29 * * * * /usr/bin/drush -y @hostmaster cron > /dev/null" >> /tmp/cron.aegir
 	crontab /tmp/cron.aegir
 	rm -rf /tmp/cron.aegir
 fi
@@ -66,10 +66,10 @@ fi
 echo "************************************************************************"
 echo " INFO: Updating Drupal installation"
 #enable the update module
-drush -y @hostmaster en update
+#drush -y @hostmaster en update
 
 #do the update
-drush -y @hostmaster up
+#drush -y @hostmaster up
 
 echo "************************************************************************"
 echo " INFO: Installation complete. Please read email for $EMAIL to continue"
