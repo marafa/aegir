@@ -98,7 +98,8 @@ ip=`ifconfig $interface | grep -w inet | awk '{print $2}' | cut -d: -f2`
 echo -e "$ip\t`hostname`" >> /etc/hosts
 }
 
-resolveip `hostname` > /dev/null
+grep `hostname` /etc/hosts
+#resolveip `hostname` > /dev/null
 if ! [ $? -eq 0 ]
 then
 	grep `hostname` /etc/hosts > /dev/null
