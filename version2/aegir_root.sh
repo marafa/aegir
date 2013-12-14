@@ -44,7 +44,7 @@ fi
 yum -y install ftp://ftp.muug.mb.ca/mirror/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
 
 [ "$version" -eq "5" ] && yum -y erase php php-common
-[ "$version" -eq "5" ] && yum -y install httpd postfix sudo unzip mysql-server php53 php53-pdo php53-process php53-mysql git php53-mbstring bzr cvs php53-gd php53-xml || yum -y install httpd postfix sudo unzip mysql-server php php-pdo php-process php-mysql git php-mbstring bzr cvs php-gd php-xml php-drush-drush
+[ "$version" -eq "5" ] && yum -y install httpd postfix sudo unzip mysql-server php53 php53-pdo php53-process php53-mysql git php53-mbstring bzr cvs php53-gd php53-xml || yum -y install httpd postfix sudo unzip mysql-server php php-pdo php-process php-mysql git php-mbstring bzr cvs php-gd php-xml php-drush-drush httpd
 
 echo " INFO: Raising PHP's memory limit to 512M"
 sed -i 's/^memory_limit = .*$/memory_limit = 512M/g' /etc/php.ini 
@@ -95,7 +95,7 @@ fi
 hostfile(){
 echo " INFO: Adding `hostname` entry to /etc/hosts"
 ip=`ifconfig $interface | grep -w inet | awk '{print $2}' | cut -d: -f2`
-echo "$ip\t`hostname`" >> /etc/hosts
+echo -e "$ip\t`hostname`" >> /etc/hosts
 }
 
 resolveip `hostname` > /dev/null
