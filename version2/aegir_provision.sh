@@ -11,7 +11,7 @@ version=0.3
 #set -x
 #trap read debug
 
-export aegir_ver=6.x-2.0-rc5
+export aegir_ver=6.x-2.0-rc4
 export DRUPAL_VER=6.x
 
 #the following is the fqdn of the aegir front end
@@ -58,7 +58,7 @@ then
 	crontab -l > /tmp/cron.aegir
 	#echo "45 1 * * * /usr/bin/drush -y @sites up" >> /tmp/cron.aegir
 	#echo "0 3 * * * /usr/bin/drush -y @hostmaster up" >> /tmp/cron.aegir
-	echo "29 * * * * /usr/bin/drush -y @hostmaster cron > /dev/null" >> /tmp/cron.aegir
+	echo "29 * * * * /usr/bin/drush -y @hostmaster cron > /dev/null" 
 	crontab /tmp/cron.aegir
 	rm -rf /tmp/cron.aegir
 fi
