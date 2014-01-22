@@ -68,6 +68,7 @@ fi
 
 echo " INFO: Disabling SElinux"
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 echo 0 >/selinux/enforce
 setenforce 0
 
