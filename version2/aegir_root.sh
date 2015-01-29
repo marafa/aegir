@@ -52,7 +52,7 @@ if [ -f /etc/sysconfig/clock ]
 then
         export city=`cat /etc/sysconfig/clock | grep ZONE | cut -d= -f2 | sed -s 's/"//g'`
 else
-        echo "WARN: /etc/sysconfig/clock not found. PHP Timezone will be set to America/New_York"
+        echo " WARN: /etc/sysconfig/clock not found. PHP Timezone will be set to America/New_York"
         sed -i 's,date.timezone =,date.timezone = America/New_York,g' /etc/php.ini
 fi
 sed -i 's+;date.timezone =+date.timezone = '$city' +g' /etc/php.ini
