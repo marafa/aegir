@@ -44,7 +44,7 @@ fi
 yum -y install ftp://ftp.muug.mb.ca/mirror/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
 
 [ "$version" -eq "5" ] && yum -y erase php php-common
-[ "$version" -eq "5" ] && yum -y install httpd postfix sudo unzip mysql-server php53 php53-pdo php53-process php53-mysql git php53-mbstring bzr cvs php53-gd php53-xml || yum -y install httpd postfix sudo unzip mysql-server php php-pdo php-process php-mysql git php-mbstring bzr cvs php-gd php-xml php-drush-drush httpd
+[ "$version" -eq "5" ] && yum -y install httpd postfix sudo unzip mysql-server php53 php53-pdo php53-process php53-mysql git php53-mbstring bzr cvs php53-gd php53-xml || yum -y install httpd postfix sudo unzip mysql-server mariadb-server php php-pdo php-process php-mysql git php-mbstring bzr cvs php-gd php-xml php-drush-drush httpd
 
 echo " INFO: Raising PHP's memory limit to 512M"
 sed -i 's/^memory_limit = .*$/memory_limit = 512M/g' /etc/php.ini 
@@ -54,9 +54,11 @@ sed -i 's+;date.timezone =+date.timezone = '$city' +g' /etc/php.ini
 echo " INFO: Restarting httpd and mysqld"
 service httpd restart
 service mysqld restart
+service mariadb restart
 
 chkconfig httpd on
 chkconfig mysqld on
+chkconfig mariadb on
 
 mysql -uroot -e 'show databases;' > /dev/null 2>&1
 if [ $? -eq 0 ]
