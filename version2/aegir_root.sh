@@ -48,7 +48,13 @@ yum -y install ftp://ftp.muug.mb.ca/mirror/fedora/epel/6/x86_64/epel-release-6-8
 
 echo " INFO: Raising PHP's memory limit to 512M"
 sed -i 's/^memory_limit = .*$/memory_limit = 512M/g' /etc/php.ini 
-export city=`cat /etc/sysconfig/clock | grep ZONE | cut -d= -f2 | sed -s 's/"//g'`
+if [ -f /etc/sysconfig/clock ]
+then
+        export city=`cat /etc/sysconfig/clock | grep ZONE | cut -d= -f2 | sed -s 's/"//g'`
+else
+        echo "WARN: /etc/sysconfig/clock not found. PHP Timezone will be set to America/New_York"
+        sed -i 's,date.timezone =,date.timezone = America/New_York,g' /etc/php.ini
+fi
 sed -i 's+;date.timezone =+date.timezone = '$city' +g' /etc/php.ini
 
 echo " INFO: Restarting httpd and mysqld"
