@@ -102,6 +102,12 @@ fi
 
 #dns configuration - add to /etc/hosts
 hostfile(){
+if [ `hostname -s` == `hostname -f` ]
+then 
+	echo " FAIL: FQDN not set!"
+	exit 4
+fi
+
 echo " INFO: Adding `hostname` entry to /etc/hosts"
 ip=`ifconfig $interface | grep -w inet | awk '{print $2}' | cut -d: -f2`
 echo -e "$ip\t`hostname`" >> /etc/hosts
