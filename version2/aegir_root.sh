@@ -1,6 +1,4 @@
 #!/bin/sh
-version=0.2-36
-
 ##############variables to change#########################
 
 
