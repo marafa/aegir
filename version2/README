@@ -4,3 +4,7 @@ License: Any license you like
 
 Disclaimer: No warranty at all, in any shape or form
 
+Steps 
+-----
+1. Run aegir_root.sh as root
+2. Run aegir_provision.sh as user aegir
