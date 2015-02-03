@@ -128,6 +128,7 @@ fi
 
 
 drush_upgrade(){ #upgrade drush to latest
+pear channel-update pear.php.net
 pear upgrade
 pear channel-discover pear.drush.org
 pear install drush/drush
