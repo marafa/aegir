@@ -1,5 +1,4 @@
 #!/bin/sh
-version=0.3
 
 #Instructions from http://community.aegirproject.org/installing/manual
 
