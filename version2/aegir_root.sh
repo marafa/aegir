@@ -102,7 +102,7 @@ fi
 hostfile(){
 if [ `hostname -s` == `hostname -f` ]
 then 
-	echo " FAIL: FQDN not set!"
+	echo " FAIL: FQDN not set"
 	exit 4
 fi
 
